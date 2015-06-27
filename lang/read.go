@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strings"
 	"unicode"
 	"unicode/utf8"
 )
@@ -146,4 +147,9 @@ func Read(r io.Reader) (*Sexp, error) {
 	tokens := make(chan token)
 	go tokenize(r, tokens)
 	return parseSexp(tokens)
+}
+
+// Read parses a Sexp from a string.
+func ReadString(exp string) (*Sexp, error) {
+	return Read(strings.NewReader(exp))
 }

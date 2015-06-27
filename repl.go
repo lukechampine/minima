@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 
@@ -10,7 +11,13 @@ import (
 func main() {
 	fmt.Println("Minima REPL v0.1")
 	fmt.Print("λ> ")
-	sexp, err := lang.Read(os.Stdin)
+	r := bufio.NewReader(os.Stdin)
+	line, err := r.ReadString('\n')
+	if err != nil {
+		fmt.Println("read error:", err)
+		return
+	}
+	sexp, err := lang.ReadString(lang.Desugar(line))
 	if err != nil {
 		fmt.Println("parse error:", err)
 		return
