@@ -22,5 +22,10 @@ func main() {
 		fmt.Println("parse error:", err)
 		return
 	}
+	sexp, err = lang.Eval(sexp)
+	if err != nil {
+		fmt.Println("error:", err)
+		return
+	}
 	fmt.Println(sexp)
 }

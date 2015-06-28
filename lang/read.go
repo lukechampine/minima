@@ -36,9 +36,17 @@ type Sexp struct {
 	X, Y *Sexp
 }
 
+// IsAtom returns true if the Sexp is an Atom.
+func (s *Sexp) IsAtom() bool {
+	return s.Atom != nil
+}
+
 // String formats a Sexp for printing.
-func (s Sexp) String() string {
-	if s.Atom != nil {
+func (s *Sexp) String() string {
+	if s == nil {
+		return "empty S-expression"
+	}
+	if s.IsAtom() {
 		return string(*s.Atom)
 	} else if s.X == nil && s.Y == nil {
 		return "invalid S-expression"
