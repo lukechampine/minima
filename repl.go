@@ -10,22 +10,24 @@ import (
 
 func main() {
 	fmt.Println("Minima REPL v0.1")
-	fmt.Print("λ> ")
 	r := bufio.NewReader(os.Stdin)
-	line, err := r.ReadString('\n')
-	if err != nil {
-		fmt.Println("read error:", err)
-		return
+	for {
+		fmt.Print("λ> ")
+		line, err := r.ReadString('\n')
+		if err != nil {
+			fmt.Println("read error:", err)
+			return
+		}
+		sexp, err := lang.ReadString(lang.Desugar(line))
+		if err != nil {
+			fmt.Println("parse error:", err)
+			return
+		}
+		sexp, err = lang.Eval(sexp)
+		if err != nil {
+			fmt.Println("error:", err)
+			return
+		}
+		fmt.Println(sexp)
 	}
-	sexp, err := lang.ReadString(lang.Desugar(line))
-	if err != nil {
-		fmt.Println("parse error:", err)
-		return
-	}
-	sexp, err = lang.Eval(sexp)
-	if err != nil {
-		fmt.Println("error:", err)
-		return
-	}
-	fmt.Println(sexp)
 }
