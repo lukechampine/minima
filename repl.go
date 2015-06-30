@@ -16,17 +16,17 @@ func main() {
 		line, err := r.ReadString('\n')
 		if err != nil {
 			fmt.Println("read error:", err)
-			return
+			continue
 		}
 		sexp, err := lang.ReadString(lang.Desugar(line))
 		if err != nil {
 			fmt.Println("parse error:", err)
-			return
+			continue
 		}
 		sexp, err = lang.Eval(sexp)
 		if err != nil {
 			fmt.Println("error:", err)
-			return
+			continue
 		}
 		fmt.Println(sexp)
 	}
