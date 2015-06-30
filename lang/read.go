@@ -103,11 +103,21 @@ func scanSexp(data []byte, atEOF bool) (advance int, token []byte, err error) {
 		return 0, nil, nil
 	}
 
+	// skip leading spaces
+	start := 0
+	var r rune
+	for width := 0; start < len(data); start += width {
+		r, width = utf8.DecodeRune(data[start:])
+		if !unicode.IsSpace(r) {
+			break
+		}
+	}
+
 	// dot or paren
-	r, _ := utf8.DecodeRune(data)
+	r, _ = utf8.DecodeRune(data[start:])
 	switch r {
 	case '(', '.', ')':
-		return 1, data[:1], nil
+		return start + 1, data[start : start+1], nil
 	}
 	// otherwise, must be a letter
 	if !unicode.IsLetter(r) {
@@ -115,18 +125,18 @@ func scanSexp(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	}
 
 	// atom
-	for width, i := 0, 0; i < len(data); i += width {
+	for width, i := 0, start; i < len(data); i += width {
 		r, width = utf8.DecodeRune(data[i:])
 		if !unicode.IsLetter(r) {
-			return i, data[:i], nil
+			return i, data[start:i], nil
 		}
 	}
-	if atEOF {
-		return len(data), data, nil
+	if atEOF && len(data) > start {
+		return len(data), data[start:], nil
 	}
 
 	// request more data
-	return 0, nil, nil
+	return start, nil, nil
 }
 
 // tokenize reads tokens from r and sends them down a channel.

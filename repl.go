@@ -18,7 +18,7 @@ func main() {
 			fmt.Println("read error:", err)
 			continue
 		}
-		sexp, err := lang.ReadString(lang.Desugar(line))
+		sexp, err := lang.ReadString(line)
 		if err != nil {
 			fmt.Println("parse error:", err)
 			continue
