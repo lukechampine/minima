@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -10,7 +11,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Minima REPL v0.1")
+	fmt.Println("Minima REPL v0.2. ^D to quit.")
 	r := bufio.NewReader(os.Stdin)
 
 REPL:
@@ -23,6 +24,10 @@ REPL:
 		for {
 			line, err := r.ReadString('\n')
 			if err != nil {
+				if err == io.EOF {
+					fmt.Println("\nLeaving Minima REPL.")
+					return
+				}
 				fmt.Println("read error:", err)
 				continue REPL
 			}
